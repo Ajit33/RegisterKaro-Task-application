@@ -2,8 +2,8 @@ import { useState } from "react";
 
 export const TaskForm = ({ onSave, onClose, initialTask }) => {
   const [task, setTask] = useState(initialTask || { title: "", description: "", priority: "Low" });
-  const [loading, setLoading] = useState(false); // For handling loading state
-  const [error, setError] = useState(""); // For error messages
+  const [loading, setLoading] = useState(false); 
+  const [error, setError] = useState(""); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,9 +20,9 @@ export const TaskForm = ({ onSave, onClose, initialTask }) => {
 
     setLoading(true);
     try {
-      await onSave(task); // Assuming onSave is async
+      await onSave(task); 
       setLoading(false);
-      onClose(); // Close the form after saving
+      onClose(); 
     } catch (err) {
       setLoading(false);
       setError("An error occurred while saving the task.");
@@ -86,7 +86,7 @@ export const TaskForm = ({ onSave, onClose, initialTask }) => {
             <button
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-blue-300"
-              disabled={loading} // Disable button if loading
+              disabled={loading} 
             >
               {loading ? "Saving..." : "Save"}
             </button>

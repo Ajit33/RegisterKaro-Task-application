@@ -59,7 +59,7 @@ export const Tasks = ({ tasks, onDelete, onUpdate }) => {
               {/* Action buttons */}
               <div className="flex justify-between items-center mt-4">
                 <Link
-                  to={`/task/${task.id}`} // Use 'to' instead of 'href'
+                  to={`/task/${task.id}`} 
                   className="flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200"
                 >
                   <Eye size={18} className="mr-1" />

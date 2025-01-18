@@ -24,19 +24,19 @@ const CreateTask = ({ addTask, toggleCreateTaskForm }) => {
         description,
         priority,
         status,
-        createdAt: new Date().toISOString(), // Set createdAt with current date and time
+        createdAt: new Date().toISOString(), 
       };
 
-      // Add the new task to the tasks list
-      await addTask(newTask); // Assuming addTask is an async function
+     
+      await addTask(newTask);
 
-      // Reset the form fields
+      // Reset the fieldssss
       setTitle("");
       setDescription("");
       setPriority("Medium");
       setStatus("In-Completed");
 
-      // Close the Create Task form
+    
       toggleCreateTaskForm();
     } catch (err) {
       setError("An error occurred while creating the task.");
