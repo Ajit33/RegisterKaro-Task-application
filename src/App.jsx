@@ -1,6 +1,7 @@
 import { BrowserRouter as Router,Route,Routes } from 'react-router-dom'
 import './App.css'
 import HomePage from './Pages/HomePage'
+import TaskDetailsPage from './Pages/TaskDetailsPage'
 
 function App() {
 
@@ -9,6 +10,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<HomePage />} />
+        <Route path='/task/:id' element={<TaskDetailsPage />} />
       </Routes>
     </Router>
   )

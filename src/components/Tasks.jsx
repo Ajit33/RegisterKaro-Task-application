@@ -1,87 +1,121 @@
-import React, { useState } from 'react';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  CheckCircle,
+  Clock,
+  Trash2,
+  Eye,
+  AlertTriangle,
+  Square,
+} from "lucide-react";
 
-const Tasks = ({ tasks, onEdit, onDelete }) => {
-  const [expandedDescription, setExpandedDescription] = useState({});
-
-  // Function to toggle description view
-  const toggleDescription = (index) => {
-    setExpandedDescription((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
-  };
-
-  // Function to determine the background color based on priority
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case 'High':
-        return 'bg-red-500 text-white';
-      case 'Medium':
-        return 'bg-yellow-400 text-black';
-      case 'Low':
-        return 'bg-green-500 text-white';
-      default:
-        return 'bg-gray-200 text-black';
-    }
-  };
-
+export const Tasks = ({ tasks, onDelete, onUpdate }) => {
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Task List</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {tasks.length > 0 ? (
-          tasks.map((task, index) => (
+    <div className="p-6 bg-gray-50">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Task List</h2>
+      {tasks.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {tasks.map((task) => (
             <div
-              key={index}
-              className={`p-4 rounded-lg shadow-md relative ${getPriorityColor(
-                task.priority
-              )}`}
+              key={task.id}
+              className={`p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl ${
+                task.completed
+                  ? "bg-gray-100 border-l-4 border-gray-500"
+                  : task.priority === "High"
+                  ? "bg-red-100 border-l-4 border-red-500"
+                  : task.priority === "Medium"
+                  ? "bg-yellow-100 border-l-4 border-yellow-500"
+                  : "bg-green-100 border-l-4 border-green-500"
+              }`}
             >
-              {/* Task title */}
-              <div className="flex justify-between items-start">
-                <h2 className="text-lg font-semibold">{task.name}</h2>
-                <div className="flex space-x-2">
-                  {/* Edit Icon */}
-                  <FaEdit
-                    className="text-gray-800 hover:text-blue-500 cursor-pointer"
-                    onClick={() => onEdit(task)}
-                  />
-                  {/* Delete Icon */}
-                  <FaTrashAlt
-                    className="text-gray-800 hover:text-red-500 cursor-pointer"
-                    onClick={() => onDelete(task.id)}
-                  />
-                </div>
+              <div className="flex justify-between items-start mb-4">
+                <h3
+                  className={`text-lg font-semibold ${
+                    task.completed
+                      ? "text-gray-500 line-through"
+                      : "text-gray-800"
+                  }`}
+                >
+                  {task.title}
+                </h3>
+                <PriorityIcon
+                  priority={task.priority}
+                  completed={task.completed}
+                />
               </div>
-
-              {/* Task description */}
-              <p className="text-sm mt-2">
-                {expandedDescription[index]
-                  ? task.description
-                  : `${task.description.slice(0, 100)}...`}
-                {task.description.length > 100 && (
-                  <span
-                    onClick={() => toggleDescription(index)}
-                    className="text-blue-500 cursor-pointer ml-1"
-                  >
-                    {expandedDescription[index] ? 'Show Less' : 'Read More'}
-                  </span>
-                )}
+              <p
+                className={`text-sm ${
+                  task.completed ? "text-gray-400" : "text-gray-600"
+                } mb-4`}
+              >
+                {task.description.length > 100
+                  ? task.description.slice(0, 100) + "..."
+                  : task.description}
               </p>
+              <div className="flex items-center text-sm text-gray-500 mb-4">
+                <Clock size={16} className="mr-2" />
+                {new Date(task.createdAt).toLocaleDateString("en-GB")}
+              </div>
+              {/* Action buttons */}
+              <div className="flex justify-between items-center mt-4">
+                <Link
+                  to={`/task/${task.id}`} // Use 'to' instead of 'href'
+                  className="flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                >
+                  <Eye size={18} className="mr-1" />
+                  View
+                </Link>
 
-              {/* Task details */}
-              <p className="text-sm mt-2 font-medium">Priority: {task.priority}</p>
-              <p className="text-sm mt-2">Created At: {task.createdAt}</p>
-              <p className="text-sm mt-2">Status: {task.status}</p>
+                <button
+                  onClick={() => onDelete(task.id)}
+                  className="flex items-center text-red-600 hover:text-red-800 transition-colors duration-200"
+                >
+                  <Trash2 size={18} className="mr-1" />
+                  Delete
+                </button>
+
+                <button
+                  onClick={() =>
+                    onUpdate(task.id, { completed: !task.completed })
+                  }
+                  className={`flex items-center ${
+                    task.completed
+                      ? "text-gray-600 hover:text-gray-800"
+                      : "text-green-600 hover:text-green-800"
+                  } transition-colors duration-200`}
+                >
+                  {task.completed ? (
+                    <CheckCircle size={18} className="mr-1" />
+                  ) : (
+                    <Square size={18} className="mr-1" />
+                  )}
+                  {task.completed ? "Completed" : "Complete"}
+                </button>
+              </div>
             </div>
-          ))
-        ) : (
-          <p className="text-gray-500">No tasks available.</p>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">
+            No tasks available. Add some tasks to get started.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Tasks;
+const PriorityIcon = ({ priority, completed }) => {
+  if (completed) {
+    return <CheckCircle size={20} className="text-gray-500" />;
+  }
+  switch (priority) {
+    case "High":
+      return <AlertTriangle size={20} className="text-red-500" />;
+    case "Medium":
+      return <AlertTriangle size={20} className="text-yellow-500" />;
+    default:
+      return <AlertTriangle size={20} className="text-green-500" />;
+  }
+};
